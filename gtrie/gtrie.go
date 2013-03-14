@@ -128,9 +128,8 @@ type eqClass struct {
 //  4. corresponding transitions lead to the same states.
 func getEquivalenceClass(node *Node) (class eqClass) {
 	children := []string{}
-	for _, transition := range node.Transitions {
-		children = append(children,
-			string(transition.Label)+":"+string(transition.Child.id))
+	for _, t := range node.Transitions {
+		children = append(children, string(t.Label)+":"+string(t.Child.id))
 	}
 	class.children = strings.Join(children, ";")
 	class.terminal = node.Terminal
