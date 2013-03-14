@@ -1,8 +1,5 @@
 language: go
 
-script:
-  - go test -v ./...
-
 notifications:
   email:
     - turcotte.mat@gmail.com
