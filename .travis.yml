@@ -1,5 +1,0 @@
-language: go
-
-notifications:
-  email:
-    - turcotte.mat@gmail.com
