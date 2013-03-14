@@ -164,7 +164,7 @@ func (r *registry) registered(node *Node) bool {
 }
 
 // Creates an acyclic finite-state automaton from a sorted list of words and
-// returns its root node.
+// returns its root node. Words can contain any unicode chararcters.
 func Create(words []string) (automaton *Node, err error) {
 	reg := newRegistery()
 	idGen := new(nodeIdGen)
