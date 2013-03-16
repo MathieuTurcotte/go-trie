@@ -9,6 +9,9 @@ Richard E. Watson (2000)](http://goo.gl/0XLPo). "Incremental Construction of
 Minimal Acyclic Finite-State Automata". Computational Linguistics: March 2000,
 Vol. 26, No. 1, Pages 3-16.
 
+The javascript equivalent of this library can be found at
+[MathieuTurcotte/node-trie](https://github.com/MathieuTurcotte/node-trie).
+
 Installing
 ==========
 
