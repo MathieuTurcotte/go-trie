@@ -48,6 +48,25 @@ func (n *Node) HasChild(letter rune) bool {
 	return n.GetChild(letter) != nil
 }
 
+func (n *Node) ChildKeys() []string {
+	if !n.HasChildren() || n.Terminal {
+		return nil
+	}
+	strs := make([]string, 0)
+	for _, c := range n.Transitions {
+		letter := c.Label
+		child_strings := c.Child.ChildKeys()
+		if child_strings != nil {
+			for _, cs := range child_strings {
+				strs = append(strs, fmt.Sprintf("%c%s", letter, cs))
+			}
+		} else {
+			strs = append(strs, fmt.Sprintf("%c", letter))
+		}
+	}
+	return strs
+}
+
 // Retrieves the child for the given letter. Returns nil if there is no child
 // for this letter.
 func (n *Node) GetChild(letter rune) (child *Node) {
