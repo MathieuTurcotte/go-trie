@@ -9,6 +9,7 @@ import (
 	"errors"
 	"sort"
 	"strings"
+	"fmt"
 )
 
 type nodeId int
@@ -71,6 +72,21 @@ func (n *Node) Accepts(suffix string) bool {
 		current = current.GetChild(letters[i])
 	}
 	return current != nil && current.Terminal
+}
+
+// Whether the given prefix is found in the tree. Most useful reading off the
+// root node.
+func (n *Node) HasPrefix(prefix string) (*Node, error) {
+	letters := []rune(prefix)
+	current := n
+	for i := 0; current != nil && i < len(letters); i++ {
+		current = current.GetChild(letters[i])
+	}
+	if current == nil {
+		err := fmt.Errorf("%s not found", prefix)
+		return nil, err
+	}
+	return current, nil
 }
 
 // Gets the number of nodes in the given automaton.
