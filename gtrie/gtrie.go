@@ -33,7 +33,7 @@ type Transition struct {
 
 // Represents a node in the acyclic finite-state automaton.
 type Node struct {
-	id          nodeId
+	Id          nodeId
 	Terminal    bool
 	Transitions []Transition
 }
@@ -96,7 +96,7 @@ func Size(node *Node) int {
 	for len(queue) > 0 {
 		node = queue[0]
 		queue = queue[1:]
-		ids[node.id] = true
+		ids[node.Id] = true
 		for _, t := range node.Transitions {
 			queue = append(queue, t.Child)
 		}
@@ -105,7 +105,7 @@ func Size(node *Node) int {
 }
 
 func newNode(idGen *nodeIdGen) *Node {
-	return &Node{id: idGen.next()}
+	return &Node{Id: idGen.next()}
 }
 
 func addTransition(node *Node, child *Node, letter rune) {
@@ -145,7 +145,7 @@ type eqClass struct {
 func getEquivalenceClass(node *Node) (class eqClass) {
 	children := []string{}
 	for _, t := range node.Transitions {
-		children = append(children, string(t.Label)+":"+string(t.Child.id))
+		children = append(children, string(t.Label)+":"+string(t.Child.Id))
 	}
 	class.children = strings.Join(children, ";")
 	class.terminal = node.Terminal
