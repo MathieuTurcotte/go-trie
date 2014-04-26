@@ -9,6 +9,7 @@ import (
 	"errors"
 	"sort"
 	"strings"
+	"fmt"
 )
 
 type nodeId int
@@ -32,7 +33,7 @@ type Transition struct {
 
 // Represents a node in the acyclic finite-state automaton.
 type Node struct {
-	id          nodeId
+	Id          nodeId
 	Terminal    bool
 	Transitions []Transition
 }
@@ -45,6 +46,25 @@ func (n *Node) HasChildren() bool {
 // Checks whether the node has a child for the given letter.
 func (n *Node) HasChild(letter rune) bool {
 	return n.GetChild(letter) != nil
+}
+
+func (n *Node) ChildKeys() []string {
+	if !n.HasChildren() || n.Terminal {
+		return nil
+	}
+	strs := make([]string, 0)
+	for _, c := range n.Transitions {
+		letter := c.Label
+		child_strings := c.Child.ChildKeys()
+		if child_strings != nil {
+			for _, cs := range child_strings {
+				strs = append(strs, fmt.Sprintf("%c%s", letter, cs))
+			}
+		} else {
+			strs = append(strs, fmt.Sprintf("%c", letter))
+		}
+	}
+	return strs
 }
 
 // Retrieves the child for the given letter. Returns nil if there is no child
@@ -73,6 +93,21 @@ func (n *Node) Accepts(suffix string) bool {
 	return current != nil && current.Terminal
 }
 
+// Whether the given prefix is found in the tree. Most useful reading off the
+// root node.
+func (n *Node) HasPrefix(prefix string) (*Node, error) {
+	letters := []rune(prefix)
+	current := n
+	for i := 0; current != nil && i < len(letters); i++ {
+		current = current.GetChild(letters[i])
+	}
+	if current == nil {
+		err := fmt.Errorf("%s not found", prefix)
+		return nil, err
+	}
+	return current, nil
+}
+
 // Gets the number of nodes in the given automaton.
 func Size(node *Node) int {
 	ids := make(map[nodeId]bool)
@@ -80,7 +115,7 @@ func Size(node *Node) int {
 	for len(queue) > 0 {
 		node = queue[0]
 		queue = queue[1:]
-		ids[node.id] = true
+		ids[node.Id] = true
 		for _, t := range node.Transitions {
 			queue = append(queue, t.Child)
 		}
@@ -89,7 +124,7 @@ func Size(node *Node) int {
 }
 
 func newNode(idGen *nodeIdGen) *Node {
-	return &Node{id: idGen.next()}
+	return &Node{Id: idGen.next()}
 }
 
 func addTransition(node *Node, child *Node, letter rune) {
@@ -129,7 +164,7 @@ type eqClass struct {
 func getEquivalenceClass(node *Node) (class eqClass) {
 	children := []string{}
 	for _, t := range node.Transitions {
-		children = append(children, string(t.Label)+":"+string(t.Child.id))
+		children = append(children, string(t.Label)+":"+string(t.Child.Id))
 	}
 	class.children = strings.Join(children, ";")
 	class.terminal = node.Terminal

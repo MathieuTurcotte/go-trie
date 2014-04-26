@@ -53,6 +53,39 @@ func TestTrie(t *testing.T) {
 	}
 }
 
+func TestPrefix(t *testing.T) {
+	words := []string{"abfg", "acfg", "adfg"}
+	missings := []string{"ar", "fo", "ade"}
+	prefixes := []string{ "ab", "ac", "ad" }
+
+	trie, err := gtrie.Create(words)
+	if err != nil {
+		log.Fatal(err)
+	} else if trie == nil {
+		log.Fatal("returned trie was nil")
+	}
+
+	// Check that prefixes are found
+	for _, word := range prefixes {
+		if _, err := trie.HasPrefix(word); err != nil {
+			t.Errorf("expected %s to be accepted as a prefix", word)
+		}
+	}
+	// Ensure that missing prefixes are not found
+	for _, word := range missings {
+		if _, err := trie.HasPrefix(word); err == nil {
+			t.Errorf("expected %s to be rejected as a prefix", word)
+		}
+	}
+
+	// Ensure that the graph is minimal by counting the number of nodes.
+	size := gtrie.Size(trie)
+	if size != 5 {
+		t.Errorf("expected size of 5 but got %s", size)
+	}
+
+}
+
 func BenchmarkAccepts(b *testing.B) {
 	b.StopTimer()
 
