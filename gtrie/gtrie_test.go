@@ -5,12 +5,13 @@ package gtrie_test
 
 import (
 	"bufio"
-	"github.com/MathieuTurcotte/go-trie/gtrie"
 	"io"
 	"log"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/MathieuTurcotte/go-trie/gtrie"
 )
 
 func TestCreateUnsortedWords(t *testing.T) {
@@ -49,7 +50,7 @@ func TestTrie(t *testing.T) {
 	// Ensure that the graph is minimal by counting the number of nodes.
 	size := gtrie.Size(trie)
 	if size != 5 {
-		t.Errorf("expected size of 5 but got %s", size)
+		t.Errorf("expected size of 5 but got %d", size)
 	}
 }
 
